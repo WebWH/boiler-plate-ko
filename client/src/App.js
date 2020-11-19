@@ -1,14 +1,14 @@
-import React from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    // Link
-} from "react-router-dom";
-
+import React, { Suspense } from 'react';
+import { Switch, Route } from "react-router-dom";
 import LandingPage from './components/views/LandingPage/LandingPage';
 import LoginPage from './components/views/LoginPage/LoginPage';
 import RegisterPage from './components/views/RegisterPage/RegisterPage';
+import NavBar from './components/views/NavBar/NavBar';
+import Footer from './components/views/Footer/Footer';
+import UploadProductPage from './components/views/UploadProductPage/UploadProductPage';
+import DetailProductPage from './components/views/DetailProductPage/DetailProductPage';
+import CartPage from './components/views/CartPage/CartPage';
+import HistoryPage from './components/views/HistoryPage/HistoryPage';
 
 import Auth from './hoc/auth'; // 인증/인가를 위한 hoc
 
@@ -17,21 +17,29 @@ import Auth from './hoc/auth'; // 인증/인가를 위한 hoc
  */
 function App() {
     return (
-        <Router>
-            <div>
+        <Suspense fallback={(<div>Loading...</div>)}>
+            <NavBar />
+            <div style={{ paddingTop: '69px', minHeight: 'calc(100vh - 80px)' }}>
                 <Switch>
                     <Route exact path="/" component={Auth(LandingPage, null)} />
-                    {/* 인증/인가를 위해 hoc로 감싸줌, Ahtu:./hoc/auth 
+                    <Route exact path="/login" component={Auth(LoginPage, false)} />
+                    <Route exact path="/register" component={Auth(RegisterPage, false)} />
+                    <Route exact path="/product/upload" component={Auth(UploadProductPage, true)} />
+                    <Route exact path="/product/:productId" component={Auth(DetailProductPage, null)} />
+                    <Route exact path="/user/cart" component={Auth(CartPage, true)} />
+                    <Route exact path="/history" component={Auth(HistoryPage, true)} />
+
+                    {/* 인증/인가를 위해 hoc로 감싸줌, Auth:./hoc/auth 
                         option
                         null : 아무나 출입
                         true : 로그인한 유저만 출입
                         false : 로그인한 유저는 출입불가
                     */}
-                    <Route exact path="/login" component={Auth(LoginPage, false)} />
-                    <Route exact path="/register" component={Auth(RegisterPage, false)} />
+
                 </Switch>
             </div>
-        </Router>
+            <Footer />
+        </Suspense>
     )
 }
 

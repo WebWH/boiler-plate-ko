@@ -2,6 +2,11 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     AUTH_USER,
+    LOGOUT_USER,
+    ADD_TO_CART,
+    GET_CART_ITEMS,
+    REMOVE_CART_ITEM,
+    ON_SUCCESS_BUY,
 } from '../_actions/types';
 
 
@@ -16,7 +21,35 @@ export default function (previousState = {}, action) { // previousState = ë¹ˆ ê°
             return { ...previousState, register_reducerNextState: action.payload }
         
         case AUTH_USER:
-            return { ...previousState, auth_reducerNextState: action.payload }
+            return { ...previousState, userData: action.payload }
+
+        case LOGOUT_USER:
+            return { ...previousState }
+        case ADD_TO_CART:
+            return {
+                ...previousState,
+                userData: {
+                    ...previousState.userData,
+                    cart: action.payload
+                }
+            }
+        case GET_CART_ITEMS:
+            return { ...previousState, cartDetail: action.payload }
+        case REMOVE_CART_ITEM:
+            return {
+                ...previousState, cartDetail: action.payload.productInfo,
+                userData: {
+                    ...previousState.userData,
+                    cart: action.payload.cart
+                }
+            }
+        case ON_SUCCESS_BUY:
+            return {
+                ...previousState, cartDetail: action.payload.cartDetail,
+                userData: {
+                    ...previousState.userData, cart: action.payload.cart
+                }
+            }
 
         default:
             return previousState;
